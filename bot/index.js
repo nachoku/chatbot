@@ -117,7 +117,7 @@ function listen() {
     return function (req, res) {
         // Capture the url for the hosted application
         // We'll later need this url to create the checkout link 
-        var url = req.secure + '://' + req.get('host');
+        var url = req.protocol + '://' + req.get('host');
         siteUrl.save(url);
         connectorListener(req, res);
     };
