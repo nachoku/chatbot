@@ -47,17 +47,15 @@ lib.dialog('/', [
         });
     },
     function (session, args) {
-        builder.Prompts.choice(session, 'select_how_to_continue', [
-            session.gettext(StartOver),
-            session.gettext(KeepGoing),
-            session.gettext(Help)
-        ]);
+        builder.Prompts.text(session, 'select_how_to_continue');
     },
     function (session, args) {
         switch (args.response.entity) {
             case KeepGoing:
+                console.log("keep Going >>>>>");
                 return session.reset();
             case StartOver:
+                console.log("Reset ------");
                 return session.reset('/');
             case Help:
                 return session.beginDialog('help:/');

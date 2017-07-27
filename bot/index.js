@@ -68,6 +68,7 @@ bot.use({
 
         var settingsRegex = localizedRegex(session, ['main_options_settings']);
         var supportRegex = localizedRegex(session, ['main_options_talk_to_support', 'help']);
+        var restartRegex = localizedRegex(session, ['restart']);
 
         if (settingsRegex.test(text)) {
             // interrupt and trigger 'settings' dialog 
@@ -76,7 +77,9 @@ bot.use({
             // interrupt and trigger 'help' dialog
             return session.beginDialog('help:/');
         }
-
+        else if (restartRegex.test(text)){
+            return session.beginDialog('/');
+        }
         // continue normal flow
         next();
     }
