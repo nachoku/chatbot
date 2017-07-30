@@ -9,6 +9,7 @@ lib.dialog('/',
 [
     function (session, args, next) {
         session.send('Here is your cart');
+        console.log(args);
         next();
     },
     function (session, args) {

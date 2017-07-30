@@ -7,7 +7,7 @@ var lib = new builder.Library('shop');
 
 
 var model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/e8b32b8d-5d2d-4ebd-9d5f-af666c748b12?subscription-key=011183f533c94864b0117e8c16778824&timezoneOffset=0&verbose=true&q=';
-
+var products=[];
 
 
 lib.dialog('/', [
@@ -54,6 +54,11 @@ lib.dialog('/', [
 
     function (session, args, next) {
         // Ask for delivery address using 'address' library
+        console.log('-----');
+        products.push(args.selection);
+        console.log(args.selection);
+
+
         if ('Checkout'===(session.message.text)) {
             console.log("fewufhowefoiwfjoiwef------");
         // Order Flowers
@@ -78,7 +83,7 @@ lib.dialog('/', [
 
     function(session, args,next)
     {
-        session.beginDialog('cart:/');
+        session.beginDialog('cart:/', {products:products});
     },
 
     function (session) {
