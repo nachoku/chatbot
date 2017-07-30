@@ -11,31 +11,32 @@ var model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/e8b32b8d-
 
 
 lib.dialog('/', [
-    function (session) {
-        // Ask for delivery address using 'address' library
-        session.beginDialog('address:/',
-            {
-                promptMessage: session.gettext('provide_delivery_address', session.message.user.name || session.gettext('default_user_name'))
-            });
-    },
 
-
-
-    function(session){
+    function(session, args, next){
+        if ('Checkout'===(session.message.text)) {
+            console.log("fewufhowefoiwfjoiwef------");
+        // Order Flowers
+        next();
+        }
         builder.Prompts.text(session, "What would you like?");
+        
         
     },
 
 
-    function (session, args) {
+    function (session, args, next) {
         // Retrieve address, continue to shop
+        if ('Checkout'===(session.message.text)) {
+            console.log("fewufhowefoiwfjoiwef------");
+        // Order Flowers
+        next();
+        }
 
         console.log('Shit starts hre');
         console.log(session.message);
 
         xhr.open("GET", model+session.message.text, false);
         xhr.send(xhr.responseText);
-        console.log("ffffiu");
         console.log(xhr.responseText)
         var json = JSON.parse(xhr.responseText);
         input=json["entities"][0]["entity"];
@@ -50,6 +51,43 @@ lib.dialog('/', [
         session.beginDialog('product-selection:/', {search : search});
     },
 
+
+    function (session, args, next) {
+        // Ask for delivery address using 'address' library
+        if ('Checkout'===(session.message.text)) {
+            console.log("fewufhowefoiwfjoiwef------");
+        // Order Flowers
+        next();
+        }
+
+        var Check=localizedRegex(session, ['Checkout']);
+        
+
+        var welcomeCard = new builder.HeroCard(session)
+        .buttons([
+            builder.CardAction.imBack(session, "Shop More", "Shop More"),
+            builder.CardAction.imBack(session, "Checkout", "Checkout")
+        ]);
+
+        session.send(new builder.Message(session)
+        .addAttachment(welcomeCard));
+
+
+        
+    },
+
+    function(session, args,next)
+    {
+        session.beginDialog('cart:/');
+    },
+
+    function (session) {
+        // Ask for delivery address using 'address' library
+        session.beginDialog('address:/',
+            {
+                promptMessage: session.gettext('provide_delivery_address', session.message.user.name || session.gettext('default_user_name'))
+            });
+    },
 
 
     // function (session, args) {
@@ -102,3 +140,17 @@ lib.dialog('/', [
 module.exports.createLibrary = function () {
     return lib.clone();
 };
+
+var LocalizedRegexCache = {};
+function localizedRegex(session, localeKeys) {
+    var locale = session.preferredLocale();
+    var cacheKey = locale + ":" + localeKeys.join('|');
+    if (LocalizedRegexCache.hasOwnProperty(cacheKey)) {
+        return LocalizedRegexCache[cacheKey];
+    }
+
+    var localizedStrings = localeKeys.map(function (key) { return session.localizer.gettext(locale, key); });
+    var regex = new RegExp('^(' + localizedStrings.join('|') + ')', 'i');
+    LocalizedRegexCache[cacheKey] = regex;
+    return regex;
+}

@@ -46,6 +46,7 @@ bot.set('localizerSettings', {
 });
 
 // Sub-Dialogs
+bot.library(require('./dialogs/cart').createLibrary());
 bot.library(require('./dialogs/shop').createLibrary());
 bot.library(require('./dialogs/address').createLibrary());
 bot.library(require('./dialogs/product-selection').createLibrary());
