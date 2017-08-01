@@ -8,17 +8,10 @@ lib.dialog('date', [
     // function (session) {
     //     session.send('Here are the options');
     // },
-    function (session) {
-        session.beginDialog('validators:size', {
-            prompt: session.gettext('ask_recipient_size'),
-            retryPrompt: session.gettext('invalid_size')
-        });
-    },
+    
     function (session, args) {
-        console.log('--------');
-        console.log(args);
 
-        session.dialogData.recipientSize=args.response;
+        
         console.log(session.dialogData.recipientSize)
         builder.Prompts.choice(session, 'choose_delivery_date', [
             session.gettext(Today),

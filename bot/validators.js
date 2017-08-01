@@ -17,6 +17,18 @@ lib.dialog('size', basicPrompterWithExpressionSize(function (input) {
     return input < 13 && input > 7;
 }));
 
+lib.dialog('price', basicPrompterWithExpression(function (input) {
+    return (input>30 && input<120);
+}));
+
+lib.dialog('qty', basicPrompterWithExpression(function (input) {
+    return (input>0 && input<11);
+}));
+
+lib.dialog('category', basicPrompterWithExpression(function (input) {
+    return (input==="Formal Shoes" || input==="Sports Shoes");
+}));
+
 lib.dialog('phonenumber', basicPrompterWithRegex(PhoneRegex));
 
 lib.dialog('email', basicPrompterWithRegex(EmailRegex));
@@ -36,19 +48,19 @@ function basicPrompterWithRegex(regex) {
 function basicPrompterWithExpressionSize(expression) {
     return new builder.IntentDialog()
         .onBegin(function (session, args) {
-            console.log(session);
+            // console.log(session);
             
             session.dialogData.retryPrompt = args.retryPrompt;
             session.send(args.prompt);
         }).onDefault(function (session) {
             var input = session.message.text;
-            xhr.open("GET", model+input, false);
-            xhr.send(xhr.responseText);
-            console.log("ffffiu");
-            console.log(xhr.responseText)
-            var json = JSON.parse(xhr.responseText);
-            input=json["entities"][0]["entity"];
-            console.log(input);
+            // xhr.open("GET", model+input, false);
+            // xhr.send(xhr.responseText);
+            // console.log("ffffiu");
+            // console.log(xhr.responseText)
+            // var json = JSON.parse(xhr.responseText);
+            // input=json["entities"][0]["entity"];
+            // console.log(input);
             if (expression(input)) {
                 session.endDialogWithResult({ response: input });
             } else {

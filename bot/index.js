@@ -12,10 +12,12 @@ var MainOptions = {
     Support: 'main_options_talk_to_support'
 };
 
-var bot = new builder.UniversalBot(connector, function (session) {
+var bot = new builder.UniversalBot(connector, 
+    function (session) {
 
     if (localizedRegex(session, [MainOptions.Shop]).test(session.message.text)) {
         // Order Flowers
+        session.userData.products=[];
         return session.beginDialog('shop:/');
     }
 
@@ -60,7 +62,6 @@ bot.library(require('./dialogs/search').createLibrary());
 
 // Validators
 bot.library(require('./validators').createLibrary());
-bot.library(require('./intelligence').createLibrary());
 
 // Trigger secondary dialogs when 'settings' or 'support' is called
 bot.use({

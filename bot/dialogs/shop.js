@@ -12,79 +12,48 @@ var products=[];
 
 lib.dialog('/', [
 
+
     function(session, args, next){
-        if ('Checkout'===(session.message.text)) {
-            console.log("fewufhowefoiwfjoiwef------");
-        // Order Flowers
-        next();
-        }
-        builder.Prompts.text(session, "What would you like?");
+        
+       session.beginDialog('search:/');
         
         
     },
 
 
-    function (session, args, next) {
-        // Retrieve address, continue to shop
-        if ('Checkout'===(session.message.text)) {
-            console.log("fewufhowefoiwfjoiwef------");
-        // Order Flowers
-        next();
-        }
-
-        console.log('Shit starts hre');
-        console.log(session.message);
-
-        xhr.open("GET", model+session.message.text, false);
-        xhr.send(xhr.responseText);
-        console.log(xhr.responseText)
-        var json = JSON.parse(xhr.responseText);
-        input=json["entities"][0]["entity"];
-        session.message.text=input
-        xhr.open("GET", model+session.message.text, false);
-
-        var search = builder;
-        // console.log("result");
-        // console.log(search);
-        // search = args.response;
-        session.message.search=search;
-        session.beginDialog('product-selection:/', {search : search});
-    },
-
-
-    function (session, args, next) {
-        // Ask for delivery address using 'address' library
-        console.log('-----');
-        products.push(args.selection);
-        console.log(args.selection);
-
-
-        if ('Checkout'===(session.message.text)) {
-            console.log("fewufhowefoiwfjoiwef------");
-        // Order Flowers
-        next();
-        }
-
-        var Check=localizedRegex(session, ['Checkout']);
-        
-
-        var welcomeCard = new builder.HeroCard(session)
-        .buttons([
-            builder.CardAction.imBack(session, "Shop More", "Shop More"),
-            builder.CardAction.imBack(session, "Checkout", "Checkout")
-        ]);
-
-        session.send(new builder.Message(session)
-        .addAttachment(welcomeCard));
-
-
-        
-    },
-
-    function(session, args,next)
+    function (session, args, next) 
     {
-        session.beginDialog('cart:/', {products:products});
+        // Ask for delivery address using 'address' library
+        console.log('------=====FK');
+        session.message.text=null;
+
+        session.beginDialog('search:prompt1');
     },
+
+    function(session, args, next)
+    {
+        if (session.message.text==="Cart")
+        {
+            session.beginDialog('cart:/', {products:products});
+        }
+        else
+        {
+            session.replaceDialog('/');
+        }
+    },
+    function (session, args, next)
+    {
+
+        if (args.response==="Shop More")
+        {
+            session.beginDialog('/');
+        }
+        else
+        {
+            next();
+        }
+    },
+
 
     function (session) {
         // Ask for delivery address using 'address' library
@@ -110,8 +79,7 @@ lib.dialog('/', [
         // Retrieve deliveryDate, continue to details
         session.dialogData.deliveryDate = args.deliveryDate;
         session.dialogData.recipientSize = args.recipientSize;
-        console.log(session.dialogData);
-        session.send('confirm_choice', session.dialogData.selection.name, session.dialogData.recipientSize, session.dialogData.deliveryDate.toLocaleDateString());
+        // session.send('confirm_choice', session.dialogData.selection.name, session.dialogData.recipientSize, session.dialogData.deliveryDate.toLocaleDateString());
         session.beginDialog('details:/');
     },
     function (session, args) {
@@ -136,7 +104,6 @@ lib.dialog('/', [
             billingAddress: session.dialogData.billingAddress
         };
 
-        console.log('order', order);
         session.beginDialog('checkout:/', { order: order });
     }
 ]);
